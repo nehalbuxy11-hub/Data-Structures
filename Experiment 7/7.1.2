@@ -1,53 +1,61 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 
-bool search(Node *root, int key) {
-if (root == NULL)
-        return false;
+#define MAX 100
 
-    if (root->data == key)
-        return true;
-
-    if (key < root->data)
-        return search(root->left, key);
-    else
-        return search(root->right, key);
+// search in BST (simpler style)
+bool find(Node *root, int key) {
+    while (root != NULL) {
+        if (key == root->data)
+            return true;
+        else if (key < root->data)
+            root = root->left;
+        else
+            root = root->right;
+    }
+    return false;
 }
 
 int main() {
-    int opCount;
-    scanf("%d", &opCount);
-    
+    int n;
+    scanf("%d", &n);
+
     Node *root = NULL;
-    
-    char outputs[MAX_OPS][50];
-    int outIndex = 0;
-    
-    int op, key;
-    for (int i = 0; i < opCount; i++) {
+
+    char result[MAX][20];
+    int k = 0;
+
+    int op, val;
+
+    for (int i = 0; i < n; i++) {
         scanf("%d", &op);
-        if(op == 1 || op == 2 || op == 3)
-            scanf("%d", &key);
-            
-        switch(op) {
-            case 1: // Insert
-                root = insert(root, key);
-                break;
-            case 2: // Delete
-                if(search(root, key))
-                    root = deleteNode(root, key);
-                break;
-            case 3: { // Search
-                if(search(root, key))
-                    strcpy(outputs[outIndex++], "found");
-                else
-                    strcpy(outputs[outIndex++], "not found");
-                break;
+
+        if (op == 1 || op == 2 || op == 3) {
+            scanf("%d", &val);
+        }
+
+        if (op == 1) {
+            root = insert(root, val);
+        }
+        else if (op == 2) {
+            if (find(root, val)) {
+                root = deleteNode(root, val);
             }
-            default:
-                break;
+        }
+        else if (op == 3) {
+            if (find(root, val)) {
+                strcpy(result[k++], "found");
+            } else {
+                strcpy(result[k++], "not found");
+            }
         }
     }
-    
-    for (int i = 0; i < outIndex; i++) {
-     printf("%s\n", outputs[i]);}
+
+    // print outputs
+    for (int i = 0; i < k; i++) {
+        printf("%s\n", result[i]);
+    }
+
+    return 0;
 }
